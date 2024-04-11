@@ -1,0 +1,22 @@
+{
+    "vmlib_ver": "24_4a2",
+    "dependencies": {
+        "pyved_engine": "???"
+    },
+    "description": "this is a placeholder so you can describe your game",
+    "author": "Unknown",
+    "assets": [
+        "tileset.png",
+        "monster.png",
+        "avatar1.png"
+    ],
+    "sounds": [],
+    "slug": "ecsRogue",
+    "title": "Roguelike Template",
+    "build_date": "Wed  Sep 20 15:55:17 2023",
+    "thumbnail512x384": "thumb_2.png",
+    "thumbnail512x512": "thumb_1.png",
+    "ktg_services": false,
+    "instructions": "no instructions provided",
+    "game_title": "ecsRogue"
+}
