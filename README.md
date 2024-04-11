@@ -6,6 +6,9 @@ Sample project based on [Pyved engine](https://github.com/gaudiatech/pyved-engin
 
 Core project is taken from engine repo [t-workshop/ECSRogue](https://github.com/gaudiatech/pyved-engine/tree/master/t-workshop/ECSRogue).
 
+Try it online:
+[PLAY!](https://hubertrex.github.io/Pyved_Roguelike_template/)
+
 ## Features
 
 * from original project
