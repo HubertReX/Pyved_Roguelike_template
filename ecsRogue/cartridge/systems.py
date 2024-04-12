@@ -211,8 +211,8 @@ def gamestate_update_sys():
 def rendering_sys():
     # print(f"{shared.sys_iterator=} {inspect.stack()[0][3]} {saved_player_pos}")
     global tileset
-
-    scr = pyv.surface_create((shared.SCR_WIDTH, shared.SCR_HEIGHT))
+    # scr = pyv.surface_create((shared.SCR_WIDTH, shared.SCR_HEIGHT))
+    scr = shared.screen
     scr.fill(shared.WALL_COLOR)
 
     # ----------
@@ -220,7 +220,11 @@ def rendering_sys():
     # ----------
     nw_corner = (0, 0)
     tmp_r4 = [None, None, None, None]
-    tile = shared.TILESET.image_by_rank(shared.WALL_TILE_RANK)
+
+    # TODO if u can fix to use tileset?
+    # tile = shared.TILESET.image_by_rank(shared.WALL_TILE_RANK)
+    tile = shared.joker_tile
+
     dim = world.get_terrain().get_size()
     for i in range(dim[0]):
         for j in range(dim[1]):
@@ -265,12 +269,21 @@ def rendering_sys():
         render_messages(scr)
         if shared.SHOW_HELP:
             render_help(scr)
-    view = shared.screen
-    view.fill(shared.WALL_COLOR)
+
+    # Re-enable this when the BUG temp surface [custom buffer] webctx is fixed
+    # view = shared.screen
+    # view.fill(shared.WALL_COLOR)
+
     # lw, lh = shared.status_label.get_size()
-    view.blit(scr, (0, 5))
-    view.blit(shared.status_label, (0, 0))
-    # shared.menu.mainloop(view)
+
+    # before:
+    # view.blit(scr, (0, 5))
+    # view.blit(shared.status_label, (0, 0))
+    # after:
+    scr.blit(shared.status_label, (0, 0))
+
+    # remove this line whene the BUG temp surface [custom buffer] webctx is fixed
+    view = scr
     if shared.SHOW_HIGHSCORE:
         render_score_table(view)
     if shared.show_input:

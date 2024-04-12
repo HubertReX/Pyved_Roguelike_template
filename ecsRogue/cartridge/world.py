@@ -22,101 +22,12 @@ pygame = pyv.pygame
 #     gfxdraw.filled_polygon(surface, self._polygon_pos, self._background_color)
 # pygame.error: Parameter 'renderer' is invalid
 
-Spritesheet = pyv.gfx.Spritesheet
-
 
 def start_game():
     shared.user_name = shared.user_name_input.get_value()
     shared.show_input = False
     shared.menu.disable()
 
-class InputBox:
-    # https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
-    def __init__(self, x, y, w, h, text='', max_len=0):
-        self.rect = pygame.Rect(x, y, w, h)
-        self.color = shared.COLOR_ACTIVE
-        self.max_len = max_len
-        self.text = text[:self.max_len] if self.max_len else text
-        self.ft = shared.fonts[24]
-        self.active = True
-        self.txt_surface = None #self.ft.render(f"{self.text}", True, self.color, "black") # FONT.render(text, True, self.color)
-        self.render_text()
-
-    def render_text(self):
-        suffix = "_" if self.active else ""
-        self.txt_surface = self.ft.render(f"{self.text}{suffix}", True, self.color, "black") # FONT.render(self.text, True, self.color)
-        
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
-            if self.rect.collidepoint(event.pos):
-                # Toggle the active variable.
-                self.active = True
-            else:
-                self.active = False
-            # Change the current color of the input box.
-            self.color = shared.COLOR_ACTIVE if self.active else shared.COLOR_INACTIVE
-            self.render_text()
-        if event.type == pygame.KEYDOWN:
-            if self.active:
-                if event.key == pygame.K_ESCAPE:
-                    # self.active = False
-                    # self.color = shared.COLOR_ACTIVE if self.active else shared.COLOR_INACTIVE
-                    # self.render_text()
-                    shared.show_input = False
-                elif event.key == pygame.K_RETURN:
-                    # print(self.text)
-                    shared.user_name = self.text
-                    shared.show_input = False
-                    self.text = ''
-                elif event.key == pygame.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                elif event.key not in [pygame.K_TAB]:
-                    self.text += event.unicode
-                    self.text = self.text[:self.max_len] if self.max_len else self.text
-                # Re-render the text.
-                # suffix = "_" if self.active else ""
-                # self.txt_surface = self.ft.render(f"{self.text}{suffix}", True, self.color, "black") # FONT.render(self.text, True, self.color)
-                self.render_text()
-                
-    def update(self):
-        # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width()+10)
-        self.rect.w = width
-
-    def draw(self, screen):
-        # Blit the text.
-        pygame.draw.rect(screen, 'black', self.rect)
-        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
-        # Blit the rect.
-        pygame.draw.rect(screen, self.color, self.rect, 2)
-
-def load_fonts():
-    font_sizes = [24, 38]
-    for font_size in font_sizes:
-        shared.fonts[font_size] = pyv.pygame.font.Font(None, font_size)
-    
-def init_menu():
-    # shared.menu = pygame_menu.Menu(
-    #     height=300,
-    #     theme=pygame_menu.themes.THEME_BLUE,
-    #     title='Welcome',
-    #     width=400
-    # )
-    # shared.user_name_input = shared.menu.add.text_input('Name: ', default='', maxchar=10)
-    # # menu.add.selector('Difficulty: ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
-    # shared.menu.add.button('Play', start_game)
-    # shared.menu.add.button('Quit', pygame_menu.events.EXIT)
-    
-    # shared.gamejoltapi = gamejoltapi.GameJoltAPI(
-    #     shared.GAME_ID,
-    #     shared.PRIVATE_KEY,
-    #     # username=USERNAME,
-    #     # userToken=TOKEN,
-    #     responseFormat="json",
-    #     submitRequests=True
-    # )    
-    shared.user_name_input = InputBox(135, 205, 140, 32, max_len=10)
     
 def create_player():
     player = pyv.new_from_archetype('player')
@@ -188,26 +99,6 @@ def update_vision_and_mobs(i, j):
         if tuple(monster['position']) in li_visible:
             monster['active'] = True  # mob "activation" --> will track the player
             # print('mob activation ok')
-
-
-def init_images():
-    grid_rez = (32, 32)
-
-    img = pyv.vars.images['tileset']
-    tileset = Spritesheet(img, 2)  # use upscaling x2
-    tileset.set_infos(grid_rez)
-
-    img = pyv.vars.images['avatar1']
-    planche_avatar = Spritesheet(img, 2)  # upscaling x2
-    planche_avatar.set_infos(grid_rez)
-    planche_avatar.colorkey = (255, 0, 255)
-
-    monster_img = pyv.vars.images['monster']
-    monster_img = pygame.transform.scale(monster_img, (32, 32))
-    monster_img.set_colorkey((255, 0, 255))
-    shared.AVATAR = planche_avatar.image_by_rank(0)
-    shared.TILESET = tileset
-    shared.MONSTER = monster_img
 
 
 def can_see(cell):

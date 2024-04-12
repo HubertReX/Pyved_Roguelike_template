@@ -83,6 +83,10 @@ MONSTER_DMG = 10
 MONSTER_HP = 10
 MONSTER = None
 TILESET = None
+# two glvars for a quick n dirty bugfix (js web cxt)
+joker_tile = None
+pot_tile = None
+exit_tile = None
 
 WALL_TILE_RANK = 912
 EXIT_TILE_RANK = 1092
