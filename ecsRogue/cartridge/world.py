@@ -1,26 +1,10 @@
 import random
 from . import shared
 from . import pimodules
-# from pygame_menu.examples import create_example_window
 
 pyv = pimodules.pyved_engine
 pyv.bootstrap_e()
 pygame = pyv.pygame
-
-# from . import gamejoltapi
-# import gamejoltapi
-
-# import pygame_menu
-# pygame_menu_ce not working with pygbag:
-#   File "/data/data/ecsrogue/assets/cartridge/systems.py", line 266, in rendering_sys
-#     shared.menu.draw(view)
-#   File "/data/data/org.python/assets/build/env/pygame_menu/menu.py", line 2117, in draw
-#     self._current._menubar.draw(surface)
-#   File "/data/data/org.python/assets/build/env/pygame_menu/widgets/core/widget.py", line 1391, in draw
-#     self._draw(surface)
-#   File "/data/data/org.python/assets/build/env/pygame_menu/widgets/widget/menubar.py", line 250, in _draw
-#     gfxdraw.filled_polygon(surface, self._polygon_pos, self._background_color)
-# pygame.error: Parameter 'renderer' is invalid
 
 
 def start_game():
@@ -28,7 +12,7 @@ def start_game():
     shared.show_input = False
     shared.menu.disable()
 
-    
+
 def create_player():
     player = pyv.new_from_archetype('player')
     pyv.init_entity(player, {

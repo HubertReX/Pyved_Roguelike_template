@@ -10,7 +10,9 @@
         "pathfinding",
         "pimodules",
         "pygame",
+        "pygbag",
         "pyved",
-        "tileset"
+        "tileset",
+        "venv"
     ]
 }

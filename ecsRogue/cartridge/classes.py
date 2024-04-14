@@ -7,7 +7,7 @@ pg = pimodules.pyved_engine.pygame
 
 class InputBox:
     # https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
-    def __init__(self, x, y, w, h, text='', max_len=0):
+    def __init__(self, x, y, w, h, text="", max_len=0):
         self.rect = pg.Rect(x, y, w, h)
         self.color = shared.COLOR_ACTIVE
         self.max_len = max_len
@@ -19,8 +19,9 @@ class InputBox:
 
     def render_text(self):
         suffix = "_" if self.active else ""
-        self.txt_surface = self.ft.render(f"{self.text}{suffix}", True, self.color,
-                                          "black")  # FONT.render(self.text, True, self.color)
+        self.txt_surface = self.ft.render(
+            f"{self.text}{suffix}", True, self.color,
+            "black")  # FONT.render(self.text, True, self.color)
 
     def handle_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -40,11 +41,12 @@ class InputBox:
                     # self.color = shared.COLOR_ACTIVE if self.active else shared.COLOR_INACTIVE
                     # self.render_text()
                     shared.show_input = False
+                    shared.user_name = None
                 elif event.key == pg.K_RETURN:
                     # print(self.text)
                     shared.user_name = self.text
                     shared.show_input = False
-                    self.text = ''
+                    self.text = ""
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
                 elif event.key not in [pg.K_TAB]:
@@ -62,7 +64,7 @@ class InputBox:
 
     def draw(self, screen):
         # Blit the text.
-        pg.draw.rect(screen, 'black', self.rect)
+        pg.draw.rect(screen, "black", self.rect)
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)

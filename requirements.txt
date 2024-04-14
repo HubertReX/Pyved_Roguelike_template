@@ -1,2 +1,3 @@
 pygbag>=0.9.1
 pyved-engine>=24.4a2
+gamejoltapi==0.0.3
