@@ -405,7 +405,8 @@ def draw_all_mobs(scrref):
     # draw the exit
     if shared.game_state["visibility_m"].get_val(*exit_ent["position"]) or shared.EXIT_VISIBLE:
         if shared.TILESET:
-            adhoc_exit_tile = shared.TILESET.image_by_rank(shared.EXIT_TILE_RANK)
+            # adhoc_exit_tile = shared.TILESET.image_by_rank(shared.EXIT_TILE_RANK)
+            adhoc_exit_tile = shared.TILESET[f"{shared.EXIT_TILE_RANK}.png"]
         else:
             adhoc_exit_tile = shared.exit_tile
         scrref.blit(
@@ -428,7 +429,8 @@ def draw_all_mobs(scrref):
                 img_index = shared.POISON_TILE_RANK if shared.ALL_POTIONS_VISIBLE else shared.UNKNOWN_TILE_RANK
             else:
                 continue
-            adhoc_pot_tile = shared.TILESET.image_by_rank(img_index) if shared.TILESET else shared.pot_tile
+            # adhoc_pot_tile = shared.TILESET.image_by_rank(img_index) if shared.TILESET else shared.pot_tile
+            adhoc_pot_tile = shared.TILESET[f"{img_index}.png"] if shared.TILESET else shared.pot_tile
             scrref.blit(
                 adhoc_pot_tile,
                 (potion["position"][0] * shared.CELL_SIDE, potion["position"][1] * shared.CELL_SIDE, shared.CELL_SIDE,
