@@ -2,7 +2,12 @@ from . import pimodules
 from . import shared
 from . import systems
 from . import world
+from .util import clear_local_score_table
+# from pygame_menu.examples import create_example_window
 
+# from . import gamejoltapi
+if not shared.IS_WEB:
+    import gamejoltapi
 
 pyv = pimodules.pyved_engine
 pygame = pyv.pygame
@@ -57,6 +62,18 @@ def load_fonts():
 
 
 def init_menu():
+    # import pygame_menu
+    # pygame_menu_ce not working with pygbag:
+    #   File "/data/data/ecsrogue/assets/cartridge/systems.py", line 266, in rendering_sys
+    #     shared.menu.draw(view)
+    #   File "/data/data/org.python/assets/build/env/pygame_menu/menu.py", line 2117, in draw
+    #     self._current._menubar.draw(surface)
+    #   File "/data/data/org.python/assets/build/env/pygame_menu/widgets/core/widget.py", line 1391, in draw
+    #     self._draw(surface)
+    #   File "/data/data/org.python/assets/build/env/pygame_menu/widgets/widget/menubar.py", line 250, in _draw
+    #     gfxdraw.filled_polygon(surface, self._polygon_pos, self._background_color)
+    # pygame.error: Parameter 'renderer' is invalid
+    
     # shared.menu = pygame_menu.Menu(
     #     height=300,
     #     theme=pygame_menu.themes.THEME_BLUE,
@@ -67,14 +84,20 @@ def init_menu():
     # # menu.add.selector('Difficulty: ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
     # shared.menu.add.button('Play', start_game)
     # shared.menu.add.button('Quit', pygame_menu.events.EXIT)
-    # shared.gamejoltapi = gamejoltapi.GameJoltAPI(
-    #     shared.GAME_ID,
-    #     shared.PRIVATE_KEY,
-    #     # username=USERNAME,
-    #     # userToken=TOKEN,
-    #     responseFormat="json",
-    #     submitRequests=True
-    # )
+    if not shared.IS_WEB:
+        if len(shared.GAME_ID) > 0 and len(shared.PRIVATE_KEY) > 0 and shared.PROD_SCORE_TABLE_ID > 0:
+            shared.gamejoltapi = gamejoltapi.GameJoltAPI(
+                shared.GAME_ID,
+                shared.PRIVATE_KEY,
+                # username=USERNAME,
+                # userToken=TOKEN,
+                responseFormat="json",
+                submitRequests=True
+            )
+        else:
+            print("GameJolt API needs proper GAME_ID, PRIVATE_KEY and PROD_SCORE_TABLE_ID to be set. See shared.py for more details.")
+            print("HIGHSCORE table will be disabled.")
+
     shared.user_name_input = InputBox(135, 205, 140, 32, max_len=10)
 
 
@@ -101,6 +124,7 @@ def init_game(vmst=None):
     load_fonts()
     init_menu()
 
+    # clear_local_score_table()
     pyv.bulk_add_systems(systems)
 
 

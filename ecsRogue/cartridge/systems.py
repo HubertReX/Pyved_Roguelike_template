@@ -1,10 +1,11 @@
+# import inspect
 import random
 
 from . import pimodules
 from . import shared
-from .util import render_messages, render_help, render_rows_of_text, render_score_table
+from . import world
+from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table
 from .util import world, player_push, draw_all_mobs
-
 
 __all__ = [
     'pg_event_proces_sys',
@@ -32,35 +33,39 @@ def pg_event_proces_sys():
     # print(f"{shared.sys_iterator=} {inspect.stack()[0][3]} {saved_player_pos}")
     if shared.is_game_over:
         ### TODO: Highscore WIP
-        # if shared.show_input:       
-        #     for event in pg.event.get():
-        #         shared.user_name_input.handle_event(event)
-        #     shared.user_name_input.update()
-        #     if not shared.show_input:
-        #         if shared.user_name:
-        #             extra_info = {
-        #                 "game_ver": shared.GAME_VER,
-        #                 "time_played": "n/a"
-        #             }
-        #             shared.gamejoltapi.scoresAdd(
-        #                 f"level {shared.level_count}", 
-        #                 shared.level_count, 
-        #                 shared.TEST_SCORE_TABLE_ID, 
-        #                 shared.user_name, 
-        #                 # json.dumps(extra_info)
-        #             )
-        #         player = pyv.find_by_archetype('player')[0]
-        #         player['health_point'] = shared.PLAYER_HP
-
+        if shared.show_input:       
+            for event in pg.event.get():
+                shared.user_name_input.handle_event(event)
+            shared.user_name_input.update()
+            if not shared.show_input:
+                if shared.user_name:
+                    if shared.CHEAT_USED:
+                        shared.messages.append("Cheat used - no highscore")
+                    else:
+                        if shared.IS_WEB:
+                            prepare_web_score()
+                        else:
+                            prepare_desktop_score()
+                player = pyv.find_by_archetype('player')[0]
+                player['health_point'] = shared.PLAYER_HP
+                
         for ev in pg.event.get():
             if ev.type == pg.KEYDOWN:
                 if ev.key in [pg.K_ESCAPE, pg.K_q]:
-                    pyv.vars.gameover = True
+                    # ending game in WEB doesn't make sense (the game freezes)
+                    if not shared.shared.IS_WEB:
+                        pyv.vars.gameover = True
                 elif ev.key == pg.K_SPACE:
                     # use flag so we we'll reset level, soon in the future
                     shared.is_game_over = False
                     shared.level_count = 1
-                    shared.messages = []
+                    shared.CHEAT_USED = False
+                    shared.ALL_MONSTERS_PATH_VISIBLE = False
+                    shared.ALL_MONSTERS_VISIBLE = False
+                    shared.ALL_POTIONS_VISIBLE = False
+                    shared.EXIT_VISIBLE = False
+                    # shared.messages = []
+                    shared.messages.append("-- NEW GAME --")
                     pyv.vars.gameover = False
                     player = pyv.find_by_archetype('player')[0]
                     player['enter_new_map'] = True
@@ -72,7 +77,9 @@ def pg_event_proces_sys():
         if ev.type == pg.KEYDOWN:
             # print(ev.key, pg.K_ESCAPE)
             if ev.key in [pg.K_ESCAPE, pg.K_q]:
-                pyv.vars.gameover = True
+                # ending game in WEB doesn't make sense (the game freezes)
+                if not shared.shared.IS_WEB:
+                    pyv.vars.gameover = True
             elif ev.key == pg.K_UP:
                 player_pos[1] -= 1
                 player_push(1)
@@ -89,20 +96,25 @@ def pg_event_proces_sys():
                 player_push(0)
 
             ### TODO: Highscore WIP
-            # elif ev.key == pg.K_s:
-            #     shared.SHOW_HIGHSCORE= not shared.SHOW_HIGHSCORE
+            elif ev.key == pg.K_s:
+                shared.SHOW_HIGHSCORE= not shared.SHOW_HIGHSCORE
             elif ev.key == pg.K_h:
                 shared.SHOW_HELP = not shared.SHOW_HELP
             elif ev.key == pg.K_e:
                 shared.EXIT_VISIBLE = not shared.EXIT_VISIBLE
+                shared.CHEAT_USED = True
             elif ev.key == pg.K_o:
                 shared.ALL_POTIONS_VISIBLE = not shared.ALL_POTIONS_VISIBLE
+                shared.CHEAT_USED = True
             elif ev.key == pg.K_m:
                 shared.ALL_MONSTERS_VISIBLE = not shared.ALL_MONSTERS_VISIBLE
+                shared.CHEAT_USED = True
             elif ev.key == pg.K_p:
                 shared.ALL_MONSTERS_PATH_VISIBLE = not shared.ALL_MONSTERS_PATH_VISIBLE
+                shared.CHEAT_USED = True
             elif ev.key == pg.K_a:
                 # toggle active on all monsters
+                shared.CHEAT_USED = True
                 monsters = pyv.find_by_archetype('monster')
                 for monster in monsters:
                     monster['active'] = not monster['active']
@@ -110,6 +122,7 @@ def pg_event_proces_sys():
                 world.update_vision_and_mobs(player_pos[0], player_pos[1])
                 # draw_all_mobs(shared.screen)
             elif ev.key == pg.K_SPACE:
+                shared.CHEAT_USED = True
                 # use flag so we we'll reset level, soon in the future
                 player = pyv.find_by_archetype('player')[0]
                 player['enter_new_map'] = True
@@ -184,27 +197,27 @@ def gamestate_update_sys():
     # classic_ftsize = 38
     ft = shared.fonts[38]  # pyv.pygame.font.Font(None, classic_ftsize)
     if player['health_point'] <= 0 and (not shared.is_game_over):
-        shared.messages.append("Game over")
+        shared.messages.append("*** Game over ***")
         shared.is_game_over = True
 
-        player['health_point'] = shared.PLAYER_HP
+        # player['health_point'] = shared.PLAYER_HP
         ### TODO: Highscore WIP
-        # shared.user_name_input.active = True
-        # shared.show_input = True
-
-        # shared.end_game_label0 = ft.render('Game Over', True, 'yellow', 'black')
-        # shared.end_game_label1 = ft.render(f'You reached Level : {shared.level_count}', True, 'yellow', 'black')
-        # shared.end_game_label2 = ft.render('Press [ESC] to exit or [SPACE] to restart', True, 'yellow', 'black')
-
-    monsters_cnt = len(pyv.find_by_archetype('monster'))
+        if shared.CHEAT_USED:
+            # no highscore
+            player['health_point'] = shared.PLAYER_HP
+            shared.messages.append("Cheat used - no highscore")
+        else:
+            shared.user_name_input.active = True
+            shared.show_input = True
+        
+    
+    monsters_cnt = len(pyv.find_by_archetype('monster')) 
     potions = pyv.find_by_archetype('potion')
     potions_cnt = 0
     for potion in potions:
         if potion['effect'] in ["Heal", "Poison"]:
             potions_cnt += 1
-    shared.status_label = ft.render(
-        f'Level: {shared.level_count}   Health: {player["health_point"]}/{shared.PLAYER_HP}   Monsters left: {monsters_cnt}   Potions left: {potions_cnt}    [h] - help',
-        True, (255, 255, 0), 'black')
+    shared.status_label = ft.render(f'Level: {shared.level_count}   Health: {player["health_point"]}/{shared.PLAYER_HP}   Monsters left: {monsters_cnt}   Potions left: {potions_cnt}    [h] - help', True, (255, 255, 0), 'black')
 
 
 # MARK: rendering_sys
@@ -251,6 +264,7 @@ def rendering_sys():
             game_over_msgs = [msg.format(level_count=shared.level_count) for msg in shared.game_over_msgs]
 
         render_rows_of_text(scr, 50, 50, 38, game_over_msgs)
+        render_messages(scr)
 
         # lw, lh = shared.end_game_label0.get_size()
         # scr.blit(
@@ -296,6 +310,8 @@ def physics_sys():
     implements the monster attack mechanic
     + it also proc any effect on the player based on what happened (potion, exit door etc)
     """
+    if shared.is_game_over:
+        return
     # print(f"{shared.sys_iterator=} {inspect.stack()[0][3]} {saved_player_pos}")
     player = pyv.find_by_archetype('player')[0]
     monsters = pyv.find_by_archetype('monster')
@@ -328,13 +344,16 @@ def physics_sys():
     for potion in potions:
         if player['position'] == potion['position']:
             if potion['effect'] == 'Heal':
-                player['health_point'] = 100
+                player['health_point'] = shared.PLAYER_HP
                 shared.messages.append(f"Healed (full HP)")
                 # print(f"HP :{player['health_point']}")
                 potion['effect'] = 'disabled'
             elif potion['effect'] == 'Poison':
                 player['health_point'] -= shared.POTION_DMG
                 shared.messages.append(f"Poison (-{shared.POTION_DMG}HP)")
+                if player['health_point'] < 0:
+                    player['health_point'] = 0
+                
                 # print(f"HP :{player['health_point']}")
                 potion['effect'] = 'disabled'
 

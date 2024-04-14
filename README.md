@@ -2,7 +2,7 @@
 
 Sample project based on [Pyved engine](https://github.com/gaudiatech/pyved-engine) using ECS Roguelike template
 
-![](/screenshots/screenshot.png)
+![screenshot](/screenshots/screenshot.png)
 
 Core project is taken from engine repo [t-workshop/ECSRogue](https://github.com/gaudiatech/pyved-engine/tree/master/t-workshop/ECSRogue).
 
