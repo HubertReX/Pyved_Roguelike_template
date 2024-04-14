@@ -95,8 +95,10 @@ def init_menu():
                 submitRequests=True
             )
         else:
+            print("*" * 50)
             print("GameJolt API needs proper GAME_ID, PRIVATE_KEY and PROD_SCORE_TABLE_ID to be set. See shared.py for more details.")
             print("HIGHSCORE table will be disabled.")
+            print("*" * 50)
 
     shared.user_name_input = InputBox(135, 205, 140, 32, max_len=10)
 

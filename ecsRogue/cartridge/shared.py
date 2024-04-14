@@ -30,7 +30,7 @@ if __import__("sys").platform == "emscripten":
 #    * it's restored to original state with each game run
 
 # Local storage stub for testing highscore in desktop mode
-USE_HIGHSCORE_STUB = False
+USE_HIGHSCORE_STUB = True
 HIGHSCORE_STUB = {
     # "Ula": {"level": 3, "stored_timestamp": "1712989042.312", "game_ver": "0.9", "time_played": "n/a"},
     # "Hubi": {"level": 2, "stored_timestamp": "1712988963.14", "game_ver": "0.9", "time_played": "n/a"},

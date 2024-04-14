@@ -325,7 +325,7 @@ def get_score_table():
     # Game Jolt API version (desktop mode)
     
     if not shared.gamejoltapi:
-        shared.SCORE_TABLE.append("Highscore table temporally unavailable")
+        shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
         return
     
     scores_payload = shared.gamejoltapi.scoresFetch(shared.NO_TOP_SCORES, shared.TEST_SCORE_TABLE_ID)
@@ -336,7 +336,7 @@ def get_score_table():
             ts = f"{datetime.fromtimestamp(score["stored_timestamp"])}"
             shared.SCORE_TABLE.append([str(rank+1), score["guest"], score["sort"], ts])
     else:
-        shared.SCORE_TABLE.append("Highscore table temporally unavailable")
+        shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
         
         
 async def get_score_table_async():
@@ -350,7 +350,7 @@ async def get_score_table_async():
     # get top scores
     # print("gamejoltapi.scoresFetch")
     if not shared.gamejoltapi:
-        shared.SCORE_TABLE.append("Highscore table temporally unavailable")
+        shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
         return
 
     scores_payload = await shared.gamejoltapi.scoresFetch(shared.NO_TOP_SCORES, shared.TEST_SCORE_TABLE_ID)
@@ -363,7 +363,7 @@ async def get_score_table_async():
             ts = f"{datetime.fromtimestamp(score["stored_timestamp"])}"
             shared.SCORE_TABLE.append([str(rank+1), score["guest"], score["sort"], ts])
     else:
-        shared.SCORE_TABLE.append("Highscore table temporally unavailable")
+        shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
 
 
 def render_score_table(scr):
