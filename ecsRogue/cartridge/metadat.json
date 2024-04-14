@@ -7,7 +7,7 @@
     "author": "Unknown",
     "assets": [
         "smallninja_sprites.json",
-        "tileset.png",
+        "tileset.json",
         "monster.png",
         "exit_tile.png",
         "pot_tile.png"

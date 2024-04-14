@@ -27,7 +27,7 @@ Spritesheet = pyv.gfx.Spritesheet  # TODO avoid using this, prefer using pyv pre
 def init_images():
     grid_rez = (32, 32)
 
-    img = pyv.vars.images['tileset']
+    # img = pyv.vars.images['tileset']
     shared.joker_tile = pygame.Surface((32, 32))
     shared.joker_tile.fill(pyv.pal.japan['peach'])
     shared.exit_tile = pyv.vars.images['exit_tile']
@@ -36,7 +36,9 @@ def init_images():
     # TODO: can fix this in js web ctx?
     # tileset = Spritesheet(img, 2)  # use upscaling x2
     # tileset.set_infos(grid_rez)
-    #shared.TILESET = tileset
+    # shared.TILESET = tileset
+    tileset_spr_sheet = pyv.vars.spritesheets['tileset']
+    shared.TILESET = tileset_spr_sheet
 
     # old avatar:
     # img = pyv.vars.images['avatar1']
