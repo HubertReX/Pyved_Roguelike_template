@@ -53,7 +53,7 @@ def pg_event_proces_sys():
             if ev.type == pg.KEYDOWN:
                 if ev.key in [pg.K_ESCAPE, pg.K_q]:
                     # ending game in WEB doesn't make sense (the game freezes)
-                    if not shared.shared.IS_WEB:
+                    if not shared.IS_WEB or shared.USE_HIGHSCORE_STUB:
                         pyv.vars.gameover = True
                 elif ev.key == pg.K_SPACE:
                     # use flag so we we'll reset level, soon in the future
@@ -78,7 +78,7 @@ def pg_event_proces_sys():
             # print(ev.key, pg.K_ESCAPE)
             if ev.key in [pg.K_ESCAPE, pg.K_q]:
                 # ending game in WEB doesn't make sense (the game freezes)
-                if not shared.shared.IS_WEB:
+                if not shared.IS_WEB or shared.USE_HIGHSCORE_STUB:
                     pyv.vars.gameover = True
             elif ev.key == pg.K_UP:
                 player_pos[1] -= 1
