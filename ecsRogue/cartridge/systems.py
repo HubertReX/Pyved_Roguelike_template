@@ -244,7 +244,7 @@ def rendering_sys():
         for j in range(dim[1]):
             tmp_r4[0], tmp_r4[1] = nw_corner
             tmp_r4[0] += i * shared.CELL_SIDE
-            tmp_r4[1] += j * shared.CELL_SIDE
+            tmp_r4[1] += (j + 1) * shared.CELL_SIDE
             tmp_r4[2] = tmp_r4[3] = shared.CELL_SIDE
 
             # draw walls 
@@ -306,7 +306,7 @@ def rendering_sys():
     # after:
     scr.blit(shared.status_label, (0, 0))
 
-    # remove this line whene the BUG temp surface [custom buffer] webctx is fixed
+    # remove this line when the BUG temp surface [custom buffer] webctx is fixed
     view = scr
     if shared.SHOW_HIGHSCORE:
         render_score_table(view)

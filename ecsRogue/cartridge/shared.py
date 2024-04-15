@@ -100,7 +100,7 @@ game_state = {
 
 
 CELL_SIDE = 32  # px
-MAZE_SIZE = (23, 22)
+MAZE_SIZE = (22, 22)
 WALL_COLOR = (8, 8, 24)
 HIDDEN_CELL_COLOR = (24, 24, 24)
 # user_name input label colors
