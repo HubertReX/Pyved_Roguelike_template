@@ -4,7 +4,7 @@ import random
 from . import pimodules
 from . import shared
 from . import world
-from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table
+from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, walls_directions
 from .util import world, player_push, draw_all_mobs
 
 __all__ = [
@@ -241,15 +241,23 @@ def rendering_sys():
     dim = world.get_terrain().get_size()
     for i in range(dim[0]):
         for j in range(dim[1]):
-            # ignoring walls
-            tmp = world.get_terrain().get_val(i, j)
-            if tmp is None:
-                continue
-
             tmp_r4[0], tmp_r4[1] = nw_corner
             tmp_r4[0] += i * shared.CELL_SIDE
             tmp_r4[1] += j * shared.CELL_SIDE
             tmp_r4[2] = tmp_r4[3] = shared.CELL_SIDE
+
+            # ignoring walls
+            tmp = world.get_terrain().get_val(i, j)
+            if tmp is None:
+                tile_id = walls_directions(i, j)
+                wall = shared.TILESET[f"{tile_id}.png"]
+                if not world.can_see((i, j)):  # hidden cell
+                    pg.draw.rect(scr, 'black', tmp_r4)
+                else:
+                    scr.blit(tile, tmp_r4)
+                    scr.blit(wall, tmp_r4)
+                continue
+
             if not world.can_see((i, j)):  # hidden cell
 
                 pg.draw.rect(scr, shared.HIDDEN_CELL_COLOR, tmp_r4)

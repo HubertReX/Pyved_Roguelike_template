@@ -25,6 +25,92 @@ pg = pyv.pygame
 #             return await response.json()
 
 # --------------------------
+# fancy walls
+# --------------------------
+def walls_directions(i, j):
+    # keys are 4 chars long, each digit determines if there is wall tiles next to this one
+    # 1 = there is
+    # 0 = no wall
+    # dirs are clockwise starting from north: "NESW"
+    # e.g.: "0110" means there is wall to the east (right) and to the south (below)
+    # dict values represent sprite id from sprite sheet
+    
+    # 3 types of fences at the top of tileset
+    walls_dirs = {
+        # only 1 wall next to us
+        "1000" : 78,
+        "0100" : 77,
+        "0010" : 78,
+        "0001" : 105,
+        # 2 walls
+        "1100" : 103,
+        "0110" : 75,
+        "0011" : 76,
+        "1001" : 104,
+        
+        "1010" : 78,
+        "0101" : 106,
+        # 3 walls
+        "1110": 79,
+        "0111": 80,
+        "1011": 108,
+        "1101": 107,
+        # all 4
+        "1111": 109
+    }
+    # Big walls from the middle of tileset - NOT SO EASY    
+    # dungeon_dirs = {
+    #     # only 1 wall next to us
+    #     "1000" : 913,
+    #     "0100" : 1022,
+    #     "0010" : 916,
+    #     "0001" : 996,
+    #     # 2 walls
+    #     "1100" : 860,
+    #     "0110" : 1028,
+    #     "0011" : 1000,
+    #     "1001" : 888,
+        
+    #     "1010" : 885,
+    #     "0101" : 995,
+    #     # 3 walls
+    #     "1110": 994,
+    #     "0111": 857,
+    #     "1011": 1024,
+    #     "1101": 972,
+    #     # all 4
+    #     # "1111": 1025
+    # }
+    COORD_OFFSET = [
+        [0, -1],
+        [+1, 0],
+        [0, +1],
+        [-1, 0],
+    ]
+
+    blocking_map = shared.random_maze.blocking_map
+    # width, height = shared.MAZE_SIZE # (24, 23)
+    # for i in range(5):
+    # i = 2
+    # j = 2
+    # for k in range(5):
+    # if blocking_map.get_val(i, j):
+    key = ""
+    # paravan_offset = 75 - 19
+    paravan_offset = 131 - 75 
+    for offset in COORD_OFFSET:
+        pos = (i + offset[0], j + offset[1])
+        if pos[0] < 0 or pos[1] < 0 or pos[0] > 23 or pos[1] > 22:
+            key += "0"
+        else:
+            if blocking_map.get_val(*pos):
+                key += "1"
+            else:
+                key += "0"
+    # print(f"{i}x{j} {key=} wall={walls_dirs.get(key, 'n/a')}")
+    return walls_dirs.get(key, 78) - paravan_offset
+
+# --------------------------
 # rendering helper functions
 # --------------------------
 def render_messages(scr):
