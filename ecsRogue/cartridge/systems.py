@@ -4,7 +4,7 @@ import random
 from . import pimodules
 from . import shared
 from . import world
-from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table
+from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, get_wall_tile
 from .util import world, player_push, draw_all_mobs
 
 __all__ = [
@@ -144,6 +144,8 @@ def world_generation_sys():
 
         w, h = shared.MAZE_SIZE
         shared.random_maze = pyv.rogue.RandomMaze(w, h, min_room_size=3, max_room_size=5)
+        shared.wall_type = random.choice(list(shared.WALLS_TERRAIN_SETS.keys()))
+        shared.FLOOR_TILE_RANK = random.choice(shared.FLOOR_TILE_RANKS)
         # print(shared.game_state['rm'].blocking_map)
 
         # IMPORTANT: adding mobs comes before computing the visibility
@@ -236,20 +238,29 @@ def rendering_sys():
 
     # TODO if u can fix to use tileset?
     # tile = shared.TILESET.image_by_rank(shared.WALL_TILE_RANK)
-    tile = shared.joker_tile
+    tile = shared.TILESET[f"{shared.FLOOR_TILE_RANK}.png"]
 
     dim = world.get_terrain().get_size()
     for i in range(dim[0]):
         for j in range(dim[1]):
-            # ignoring walls
-            tmp = world.get_terrain().get_val(i, j)
-            if tmp is None:
-                continue
-
             tmp_r4[0], tmp_r4[1] = nw_corner
             tmp_r4[0] += i * shared.CELL_SIDE
-            tmp_r4[1] += j * shared.CELL_SIDE
+            tmp_r4[1] += (j + 1) * shared.CELL_SIDE
             tmp_r4[2] = tmp_r4[3] = shared.CELL_SIDE
+
+            # draw walls 
+            # TODO: the calculation of wall tile should be moved to world_generation_sys so it's done only once not witch each frame
+            tmp = world.get_terrain().get_val(i, j)
+            if tmp is None:                
+                tile_id = get_wall_tile(i, j, shared.wall_type)
+                wall = shared.TILESET[f"{tile_id}.png"]
+                if not world.can_see((i, j)):  # hidden cell
+                    pg.draw.rect(scr, 'black', tmp_r4)
+                else:
+                    scr.blit(tile, tmp_r4)
+                    scr.blit(wall, tmp_r4)
+                continue
+
             if not world.can_see((i, j)):  # hidden cell
 
                 pg.draw.rect(scr, shared.HIDDEN_CELL_COLOR, tmp_r4)
@@ -296,7 +307,7 @@ def rendering_sys():
     # after:
     scr.blit(shared.status_label, (0, 0))
 
-    # remove this line whene the BUG temp surface [custom buffer] webctx is fixed
+    # remove this line when the BUG temp surface [custom buffer] webctx is fixed
     view = scr
     if shared.SHOW_HIGHSCORE:
         render_score_table(view)

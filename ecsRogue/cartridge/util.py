@@ -25,6 +25,40 @@ pg = pyv.pygame
 #             return await response.json()
 
 # --------------------------
+# fancy walls
+# --------------------------
+def get_wall_tile(i, j, wall_type="big_fence"):
+    # keys are 4 chars long, each digit determines if there is wall tiles next to this one
+    # 1 = there is a wall
+    # 0 = no wall
+    # dirs are clockwise starting from north: "NESW"
+    # e.g.: "0110" means there is wall to the east (right) and to the south (below)
+    # dict values represent sprite id from sprite sheet
+    
+    COORD_OFFSET = [
+        [0, -1],
+        [+1, 0],
+        [0, +1],
+        [-1, 0],
+    ]
+
+    blocking_map = shared.random_maze.blocking_map
+    key = ""
+    max_w, max_h = shared.MAZE_SIZE
+
+    for offset in COORD_OFFSET:
+        pos = (i + offset[0], j + offset[1])
+        if pos[0] < 0 or pos[1] < 0 or pos[0] >= max_w  or pos[1] >= max_h:
+            key += "0"
+        else:
+            if blocking_map.get_val(*pos):
+                key += "1"
+            else:
+                key += "0"
+
+    return shared.WALLS_TERRAIN_SETS[wall_type].get(key, 0)
+
+# --------------------------
 # rendering helper functions
 # --------------------------
 def render_messages(scr):
@@ -412,7 +446,7 @@ def draw_all_mobs(scrref):
         scrref.blit(
             adhoc_exit_tile, (
                 exit_ent["position"][0] * shared.CELL_SIDE,
-                exit_ent["position"][1] * shared.CELL_SIDE,
+                (exit_ent["position"][1] + 1) * shared.CELL_SIDE,
                 shared.CELL_SIDE,
                 shared.CELL_SIDE
             )
@@ -433,12 +467,12 @@ def draw_all_mobs(scrref):
             adhoc_pot_tile = shared.TILESET[f"{img_index}.png"] if shared.TILESET else shared.pot_tile
             scrref.blit(
                 adhoc_pot_tile,
-                (potion["position"][0] * shared.CELL_SIDE, potion["position"][1] * shared.CELL_SIDE, shared.CELL_SIDE,
+                (potion["position"][0] * shared.CELL_SIDE, (potion["position"][1] + 1) * shared.CELL_SIDE, shared.CELL_SIDE,
                  shared.CELL_SIDE))
 
     # fait une projection coordonnées i,j de matrice vers targx, targy coordonnées en pixel de l'écran
     proj_function = (lambda locali, localj: (locali * shared.CELL_SIDE, localj * shared.CELL_SIDE))
-    targx, targy = proj_function(av_i, av_j)
+    targx, targy = proj_function(av_i, av_j + 1)
     scrref.blit(shared.AVATAR, (targx, targy, shared.CELL_SIDE, shared.CELL_SIDE))
 
     # draw all enemies
@@ -446,7 +480,7 @@ def draw_all_mobs(scrref):
         pos = monster["position"]
         # pos, t = enemy_info
         if shared.ALL_MONSTERS_VISIBLE or shared.game_state["visibility_m"].get_val(*pos):
-            en_i, en_j = pos[0] * shared.CELL_SIDE, pos[1] * shared.CELL_SIDE
+            en_i, en_j = pos[0] * shared.CELL_SIDE, (pos[1] + 1) * shared.CELL_SIDE
             if shared.ALL_MONSTERS_PATH_VISIBLE:
                 pg.draw.rect(scrref, monster["color"], (en_i, en_j, shared.CELL_SIDE, shared.CELL_SIDE))
                 if len(monster["path"]) > 1:
@@ -456,7 +490,7 @@ def draw_all_mobs(scrref):
                         pg.draw.rect(
                             scrref, monster["color"], (
                                 (path_pos[0] * shared.CELL_SIDE) + 4 + delta_x,
-                                (path_pos[1] * shared.CELL_SIDE) + 4 + delta_y,
+                                ((path_pos[1] + 1) * shared.CELL_SIDE) + 4 + delta_y,
                                 4, 4
                             )
                         )
