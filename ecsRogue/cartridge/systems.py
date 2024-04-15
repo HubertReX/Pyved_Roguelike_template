@@ -4,7 +4,7 @@ import random
 from . import pimodules
 from . import shared
 from . import world
-from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, walls_directions
+from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, get_wall_tile
 from .util import world, player_push, draw_all_mobs
 
 __all__ = [
@@ -144,6 +144,7 @@ def world_generation_sys():
 
         w, h = shared.MAZE_SIZE
         shared.random_maze = pyv.rogue.RandomMaze(w, h, min_room_size=3, max_room_size=5)
+        shared.wall_type = random.choice(list(shared.WALLS_TERRAIN_SETS.keys()))
         # print(shared.game_state['rm'].blocking_map)
 
         # IMPORTANT: adding mobs comes before computing the visibility
@@ -246,10 +247,11 @@ def rendering_sys():
             tmp_r4[1] += j * shared.CELL_SIDE
             tmp_r4[2] = tmp_r4[3] = shared.CELL_SIDE
 
-            # ignoring walls
+            # draw walls 
+            # TODO: the calculation of wall tile should be moved to world_generation_sys so it's done only once not witch each frame
             tmp = world.get_terrain().get_val(i, j)
-            if tmp is None:
-                tile_id = walls_directions(i, j)
+            if tmp is None:                
+                tile_id = get_wall_tile(i, j, shared.wall_type)
                 wall = shared.TILESET[f"{tile_id}.png"]
                 if not world.can_see((i, j)):  # hidden cell
                     pg.draw.rect(scr, 'black', tmp_r4)
