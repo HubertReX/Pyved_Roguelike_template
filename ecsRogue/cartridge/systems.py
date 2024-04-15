@@ -145,6 +145,7 @@ def world_generation_sys():
         w, h = shared.MAZE_SIZE
         shared.random_maze = pyv.rogue.RandomMaze(w, h, min_room_size=3, max_room_size=5)
         shared.wall_type = random.choice(list(shared.WALLS_TERRAIN_SETS.keys()))
+        shared.FLOOR_TILE_RANK = random.choice(shared.FLOOR_TILE_RANKS)
         # print(shared.game_state['rm'].blocking_map)
 
         # IMPORTANT: adding mobs comes before computing the visibility
@@ -237,7 +238,7 @@ def rendering_sys():
 
     # TODO if u can fix to use tileset?
     # tile = shared.TILESET.image_by_rank(shared.WALL_TILE_RANK)
-    tile = shared.joker_tile
+    tile = shared.TILESET[f"{shared.FLOOR_TILE_RANK}.png"]
 
     dim = world.get_terrain().get_size()
     for i in range(dim[0]):
