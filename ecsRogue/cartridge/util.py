@@ -333,7 +333,7 @@ def get_score_table():
     if scores_payload["success"]:
         shared.SCORE_TABLE.append(["Rank", "Name", "Level", "Date"])
         for rank, score in enumerate(scores_payload["scores"]):
-            ts = f"{datetime.fromtimestamp(score["stored_timestamp"])}"
+            ts = f"{datetime.fromtimestamp(score['stored_timestamp'])}"
             shared.SCORE_TABLE.append([str(rank+1), score["guest"], score["sort"], ts])
     else:
         shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
@@ -360,7 +360,7 @@ async def get_score_table_async():
         shared.SCORE_TABLE.append(["Rank", "Name", "Level", "Date"])
         # print(scores_payload["scores"][0])
         for rank, score in enumerate(scores_payload["scores"]):
-            ts = f"{datetime.fromtimestamp(score["stored_timestamp"])}"
+            ts = f"{datetime.fromtimestamp(score['stored_timestamp'])}"
             shared.SCORE_TABLE.append([str(rank+1), score["guest"], score["sort"], ts])
     else:
         shared.SCORE_TABLE = ["Highscore table temporally unavailable"]
