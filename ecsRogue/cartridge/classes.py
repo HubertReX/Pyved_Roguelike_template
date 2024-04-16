@@ -12,7 +12,7 @@ class InputBox:
         self.color = shared.COLOR_ACTIVE
         self.max_len = max_len
         self.text = text[:self.max_len] if self.max_len else text
-        self.ft = shared.fonts[24]
+        self.ft = shared.fonts[shared.FONT_SIZE_SMALL]
         self.active = True
         self.txt_surface = None  # self.ft.render(f"{self.text}", True, self.color, "black") # FONT.render(text, True, self.color)
         self.render_text()

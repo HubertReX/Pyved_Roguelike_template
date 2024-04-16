@@ -91,7 +91,7 @@ def can_see(cell):
 
 
 def get_all_walkable_cells():
-    w, h = 24, 24  # Update these dimensions to match your map size
+    w, h = shared.MAZE_SIZE  # Update these dimensions to match your map size
     walkable_cells = []
 
     for i in range(w):

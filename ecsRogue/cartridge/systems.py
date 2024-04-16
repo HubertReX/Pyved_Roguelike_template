@@ -201,8 +201,8 @@ def world_generation_sys():
 def gamestate_update_sys():
     # print(f"{shared.sys_iterator=} {inspect.stack()[0][3]} {saved_player_pos}")
     player = pyv.find_by_archetype('player')[0]
-    # classic_ftsize = 38
-    ft = shared.fonts[38]  # pyv.pygame.font.Font(None, classic_ftsize)
+    
+    ft = shared.fonts[shared.FONT_SIZE_MEDIUM]
     if player['health_point'] <= 0 and (not shared.is_game_over):
         shared.messages.append("*** Game over ***")
         shared.is_game_over = True
@@ -277,7 +277,7 @@ def rendering_sys():
         else:
             game_over_msgs = [msg.format(level_count=shared.level_count) for msg in shared.game_over_msgs]
 
-        render_rows_of_text(scr, 50, 50, 38, game_over_msgs)
+        render_rows_of_text(scr, 50, 50, shared.FONT_SIZE_MEDIUM, game_over_msgs)
         render_messages(scr)
 
     else:

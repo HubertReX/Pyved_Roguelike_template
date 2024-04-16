@@ -9,6 +9,9 @@ user_name_input = None
 user_name = None 
 
 fonts = {}
+FONT_SIZE_SMALL = 24
+FONT_SIZE_MEDIUM = 38
+FONT_SIZE_LARGE = 55
 # Need a flag to handle differently when game is run in desktop mode or in a web browser
 IS_WEB = False
 # local storage in web version for high score table

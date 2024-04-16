@@ -74,18 +74,22 @@ def get_wall_tile(i, j, wall_type="big_fence"):
 # --------------------------
 def render_messages(scr):
     # render last 12 game events in lower right part of screen
-    font_size = 24
+    font_size = shared.FONT_SIZE_SMALL
     ft = shared.fonts[font_size]
+    
     # reverse order (printed from bottom of screen up) limit to 12 last messages
     for i, msg in enumerate(shared.messages[::-1][:12]):
         label = ft.render(str(msg), True, "yellow", "black")
-        scr.blit(label, (22 * 32, shared.SCR_HEIGHT - ((i + 1) * font_size)))
+        right_panel_x = shared.MAZE_SIZE[0] * shared.CELL_SIDE
+        scr.blit(label, (right_panel_x, shared.SCR_HEIGHT - ((i + 1) * font_size)))
 
 
 def render_help(scr):
     # render help messages with key bindings in upper right part of screen
-    font_size = 24
-    render_rows_of_text(scr, 22 * 32, 38, font_size, shared.help_msgs)
+    font_size = shared.FONT_SIZE_SMALL
+    right_panel_x = shared.MAZE_SIZE[0] * shared.CELL_SIDE
+    right_panel_y = shared.FONT_SIZE_MEDIUM # size of status panel
+    render_rows_of_text(scr, right_panel_x, right_panel_y, font_size, shared.help_msgs)
 
 
 def render_rows_of_text(scr, x, y, font_size, msgs, bg_panel=True, text_color="yellow", bg_color="black"):
@@ -419,10 +423,10 @@ def render_score_table(scr):
         # asyncio.run(get_score_table_async())
     columns_x = [50, 50 + 80, 50 + 80 + 200, 50 + 80 + 250+ 80, 50 + 80 + 250 + 80 + 240]
     rows_cnt = len(shared.SCORE_TABLE)
-    font_size = 38
+    font_size = shared.FONT_SIZE_MEDIUM
 
     if rows_cnt == 1:
-        render_rows_of_text(scr, 50, 100, 38, shared.SCORE_TABLE)
+        render_rows_of_text(scr, 50, 100, shared.FONT_SIZE_MEDIUM, shared.SCORE_TABLE)
     else:
         # black panel under score table
         pg.draw.rect(scr, "black", [25, 100 - 20, columns_x[4], (rows_cnt + 1) * font_size])
