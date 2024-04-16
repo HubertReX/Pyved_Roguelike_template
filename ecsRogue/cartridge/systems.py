@@ -32,7 +32,6 @@ saved_player_pos = [None, None]
 def pg_event_proces_sys():
     # print(f"{shared.sys_iterator=} {inspect.stack()[0][3]} {saved_player_pos}")
     if shared.is_game_over:
-        ### TODO: Highscore WIP
         if shared.show_input:       
             for event in pg.event.get():
                 shared.user_name_input.handle_event(event)
@@ -100,7 +99,6 @@ def pg_event_proces_sys():
                 player_pos[0] += 1
                 player_push(0)
 
-            ### TODO: Highscore WIP
             elif ev.key == pg.K_s:
                 shared.SHOW_HIGHSCORE= not shared.SHOW_HIGHSCORE
             elif ev.key == pg.K_F12:
@@ -209,8 +207,6 @@ def gamestate_update_sys():
         shared.messages.append("*** Game over ***")
         shared.is_game_over = True
 
-        # player['health_point'] = shared.PLAYER_HP
-        ### TODO: Highscore WIP
         if shared.CHEAT_USED:
             # no highscore
             player['health_point'] = shared.PLAYER_HP

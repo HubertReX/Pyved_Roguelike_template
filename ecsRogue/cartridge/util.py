@@ -17,13 +17,6 @@ from . import pimodules
 pyv = pimodules.pyved_engine
 pg = pyv.pygame
 
-
-# TODO: Highscore WIP
-# async def _urlopen_async(url):
-#     async with aiohttp.ClientSession() as session:
-#         async with session.get(url) as response:
-#             return await response.json()
-
 # --------------------------
 # other
 # --------------------------
@@ -115,7 +108,6 @@ def split_string(text, length):
 # --------------------------
 
 
-### TODO: Highscore WIP
 # async def _urlopen_async(url):
 #     async with aiohttp.ClientSession() as session:
 #         async with session.get(url) as response:
@@ -186,7 +178,7 @@ def prepare_web_score():
     new_rank = get_score_rank(scores)
     add_messages_based_on_ranks(old_rank, new_rank)
     shared.SCORES = top_scores
-    ### TODO: Highscore WIP
+    
     if shared.USE_HIGHSCORE_STUB:
         shared.HIGHSCORE_STUB = top_scores
 
@@ -220,7 +212,7 @@ def set_web_score(data):
     
     if shared.USE_HIGHSCORE_STUB:
         return
-    ### TODO: Highscore WIP
+
     try:
         data_str = json.dumps(data)
         from platform import window
@@ -240,7 +232,7 @@ def get_scores():
     
     if shared.USE_HIGHSCORE_STUB:
         return shared.HIGHSCORE_STUB
-    ### TODO: Highscore WIP
+
     try:
         from platform import window
         
@@ -299,7 +291,6 @@ def clear_local_score_table():
     # clears score data from local storage
     # Local storage version (web browser) or STUB
     
-    ### TODO: Highscore WIP
     if shared.IS_WEB:
         try:
             from platform import window
@@ -326,7 +317,7 @@ def clear_worst_scores(top_scores):
                 del shared.HIGHSCORE_STUB[user_name]
                 
         return
-    ### TODO: Highscore WIP
+
     try:
         from platform import window
         
