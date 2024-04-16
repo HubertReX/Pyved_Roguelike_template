@@ -14,6 +14,7 @@ Try it online:
 * from original project
   * random map generation
   * A* path finding for monsters
+  * player's line of sight
   * implemented using **Entity Component System (ECS)**
 * EXTRA features
   * simple UI
@@ -21,24 +22,31 @@ Try it online:
     * help panel
     * action log
   * difficulty progression (with each level +1 monster)
+  * highscore list
+  * random tiles for walls and floor
   * some debug tools
     * show exit
     * show potions with it's type
     * show all monsters
     * activate all monsters
     * show monster paths
+    * take screenshot
 
 ## Known bugs
 
-* monsters sometimes occupy the same location
-* monsters hit 2 times per one turn
+* 2 or more monsters sometimes occupy the same location
+* after loading a new level, sometimes player starts on monster position
+* monsters hit 2 times per one player turn
+* action log is not cleared as expected when new game starts
 
 ## Ideas for future
 
-* Highscore table (WIP)
-* use walls tiles from 'tileset.png' instead of black rectangle
-* switch font to pixel art witch fixed length
-* add sounds
+* ~~Highscore table~~ ✅ done
+* ~~use walls tiles from 'tileset.png' instead of black rectangle~~
+* add more monster types
+* make fight more entertaining
+* switch font to monospace pixel art
+* add sounds (music and sfx)
 * make UI more appealing (icons, colors, menus)
 
 ## Installation
@@ -112,3 +120,11 @@ upload 'build/web.zip' to [itch.io](https://itch.io/) or any other hosted site.
 ### To GitHub pages
 
 full instruction [here](https://pygame-web.github.io/wiki/pygbag/github.io/)
+
+## Credits
+
+Assets created by:
+[Pixel-boy](https://pixel-boy.itch.io/)
+[AAA](https://www.instagram.com/challenger.aaa/?hl=fr)
+
+Patreon: [https://www.patreon.com/pixelarchipel](https://www.patreon.com/pixelarchipel)
