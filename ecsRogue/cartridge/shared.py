@@ -1,3 +1,5 @@
+from pathlib import Path
+
 GAME_VER = "0.9"
 # print exceptions in GUI only in debug mode (useful for debugging highscore local web storage when there is no terminal)
 IS_DEBUG = True # check if we can use __debug__ with pyved and pygbag
@@ -7,6 +9,9 @@ user_name_input = None
 user_name = None 
 
 fonts = {}
+FONT_SIZE_SMALL = 24
+FONT_SIZE_MEDIUM = 38
+FONT_SIZE_LARGE = 55
 # Need a flag to handle differently when game is run in desktop mode or in a web browser
 IS_WEB = False
 # local storage in web version for high score table
@@ -69,22 +74,25 @@ game_over_msgs_hs = [
 game_over_msgs = [
     "Game Over",
     'You reached level: {level_count}',
-    'Press {exit}[SPACE] to restart'.format(exit=('' if IS_WEB else '[ESC] to quit or ')),
+    'Press {exit}[SPACE] to restart'.format(exit=('' if IS_WEB or USE_HIGHSCORE_STUB else '[ESC] to quit or ')),
 ]
 
-help_msgs = [
-    "[ARROWS] - to move",
-    "[s] - show highscore",
-    ('' if IS_WEB else '[ESC] - exit'),
-    "",
-    "*** CHEATS/DEBUG ***",
-    "[SPACE] - new maze",
-    "[m] - show enemy",
-    "[a] - activate enemies",
-    "[p] - show enemy path",
-    "[e] - show exit",
-    "[o] - show potions",
-]
+help_msgs = []
+help_msgs.append("[ARROWS] - to move")
+help_msgs.append("[s] - show highscore")
+if not IS_WEB or USE_HIGHSCORE_STUB:
+    help_msgs.append('[F12] - screenshot')
+    help_msgs.append('[ESC], [q] - exit')
+help_msgs.append("")
+help_msgs.append("*** CHEATS/DEBUG ***")
+help_msgs.append("[SPACE] - new maze")
+help_msgs.append("[m] - show enemies")
+help_msgs.append("[a] - activate enemies")
+help_msgs.append("[p] - show enemies path")
+help_msgs.append("[e] - show exit")
+help_msgs.append("[o] - show potions")
+
+SCREENSHOT_FOLDER = Path("..") / "screenshots"
 
 VISION_RANGE: int = 4
 fov_computer = None

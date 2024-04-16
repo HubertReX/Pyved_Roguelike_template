@@ -58,7 +58,7 @@ def init_images():
 
 
 def load_fonts():
-    font_sizes = [24, 38]
+    font_sizes = [shared.FONT_SIZE_SMALL, shared.FONT_SIZE_MEDIUM, shared.FONT_SIZE_LARGE]
     for font_size in font_sizes:
         shared.fonts[font_size] = pyv.pygame.font.Font(None, font_size)
 

@@ -17,12 +17,23 @@ from . import pimodules
 pyv = pimodules.pyved_engine
 pg = pyv.pygame
 
+# --------------------------
+# other
+# --------------------------
+def save_screenshot():
+    # save current screen to SCREENSHOT_FOLDER as PNG with timestamp in name
+    
+    # prevent from taking screenshots in web browser
+    # (it actually works, the file is saved in virtual FS 
+    # and there is access to it, but I don't see a way to download it)
+    if not shared.IS_WEB or shared.USE_HIGHSCORE_STUB:
+        time_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = shared.SCREENSHOT_FOLDER / f"screenshot_{time_str}.png"
+        pg.image.save(shared.screen, file_name)
+        shared.messages.append("screenshot saved to file")
+        if shared.IS_DEBUG:
+            shared.messages.append(str(file_name))
 
-# TODO: Highscore WIP
-# async def _urlopen_async(url):
-#     async with aiohttp.ClientSession() as session:
-#         async with session.get(url) as response:
-#             return await response.json()
 
 # --------------------------
 # fancy walls
@@ -63,18 +74,22 @@ def get_wall_tile(i, j, wall_type="big_fence"):
 # --------------------------
 def render_messages(scr):
     # render last 12 game events in lower right part of screen
-    font_size = 24
+    font_size = shared.FONT_SIZE_SMALL
     ft = shared.fonts[font_size]
+    
     # reverse order (printed from bottom of screen up) limit to 12 last messages
     for i, msg in enumerate(shared.messages[::-1][:12]):
-        label = ft.render(msg, True, "yellow", "black")
-        scr.blit(label, (22 * 32, shared.SCR_HEIGHT - ((i + 1) * font_size)))
+        label = ft.render(str(msg), True, "yellow", "black")
+        right_panel_x = shared.MAZE_SIZE[0] * shared.CELL_SIDE
+        scr.blit(label, (right_panel_x, shared.SCR_HEIGHT - ((i + 1) * font_size)))
 
 
 def render_help(scr):
     # render help messages with key bindings in upper right part of screen
-    font_size = 24
-    render_rows_of_text(scr, 22 * 32, 38, font_size, shared.help_msgs)
+    font_size = shared.FONT_SIZE_SMALL
+    right_panel_x = shared.MAZE_SIZE[0] * shared.CELL_SIDE
+    right_panel_y = shared.FONT_SIZE_MEDIUM # size of status panel
+    render_rows_of_text(scr, right_panel_x, right_panel_y, font_size, shared.help_msgs)
 
 
 def render_rows_of_text(scr, x, y, font_size, msgs, bg_panel=True, text_color="yellow", bg_color="black"):
@@ -97,7 +112,6 @@ def split_string(text, length):
 # --------------------------
 
 
-### TODO: Highscore WIP
 # async def _urlopen_async(url):
 #     async with aiohttp.ClientSession() as session:
 #         async with session.get(url) as response:
@@ -168,7 +182,7 @@ def prepare_web_score():
     new_rank = get_score_rank(scores)
     add_messages_based_on_ranks(old_rank, new_rank)
     shared.SCORES = top_scores
-    ### TODO: Highscore WIP
+    
     if shared.USE_HIGHSCORE_STUB:
         shared.HIGHSCORE_STUB = top_scores
 
@@ -202,7 +216,7 @@ def set_web_score(data):
     
     if shared.USE_HIGHSCORE_STUB:
         return
-    ### TODO: Highscore WIP
+
     try:
         data_str = json.dumps(data)
         from platform import window
@@ -222,7 +236,7 @@ def get_scores():
     
     if shared.USE_HIGHSCORE_STUB:
         return shared.HIGHSCORE_STUB
-    ### TODO: Highscore WIP
+
     try:
         from platform import window
         
@@ -281,7 +295,6 @@ def clear_local_score_table():
     # clears score data from local storage
     # Local storage version (web browser) or STUB
     
-    ### TODO: Highscore WIP
     if shared.IS_WEB:
         try:
             from platform import window
@@ -308,7 +321,7 @@ def clear_worst_scores(top_scores):
                 del shared.HIGHSCORE_STUB[user_name]
                 
         return
-    ### TODO: Highscore WIP
+
     try:
         from platform import window
         
@@ -410,10 +423,10 @@ def render_score_table(scr):
         # asyncio.run(get_score_table_async())
     columns_x = [50, 50 + 80, 50 + 80 + 200, 50 + 80 + 250+ 80, 50 + 80 + 250 + 80 + 240]
     rows_cnt = len(shared.SCORE_TABLE)
-    font_size = 38
+    font_size = shared.FONT_SIZE_MEDIUM
 
     if rows_cnt == 1:
-        render_rows_of_text(scr, 50, 100, 38, shared.SCORE_TABLE)
+        render_rows_of_text(scr, 50, 100, shared.FONT_SIZE_MEDIUM, shared.SCORE_TABLE)
     else:
         # black panel under score table
         pg.draw.rect(scr, "black", [25, 100 - 20, columns_x[4], (rows_cnt + 1) * font_size])
