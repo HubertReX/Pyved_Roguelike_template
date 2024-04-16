@@ -4,7 +4,7 @@ import random
 from . import pimodules
 from . import shared
 from . import world
-from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, get_wall_tile
+from .util import prepare_desktop_score, prepare_web_score, render_messages, render_help, render_rows_of_text, render_score_table, get_wall_tile, save_screenshot
 from .util import world, player_push, draw_all_mobs
 
 __all__ = [
@@ -64,8 +64,13 @@ def pg_event_proces_sys():
                     shared.ALL_MONSTERS_VISIBLE = False
                     shared.ALL_POTIONS_VISIBLE = False
                     shared.EXIT_VISIBLE = False
-                    # shared.messages = []
-                    shared.messages.append("-- NEW GAME --")
+                    # do not clear messages in DEBUG mode
+                    # since some utils functions throw there exceptions
+                    if shared.IS_DEBUG:
+                        shared.messages.append("-- NEW GAME --")
+                    else:
+                        # it doesn't work, messages stay the same - why?
+                        shared.messages.clear()
                     pyv.vars.gameover = False
                     player = pyv.find_by_archetype('player')[0]
                     player['enter_new_map'] = True
@@ -98,6 +103,8 @@ def pg_event_proces_sys():
             ### TODO: Highscore WIP
             elif ev.key == pg.K_s:
                 shared.SHOW_HIGHSCORE= not shared.SHOW_HIGHSCORE
+            elif ev.key == pg.K_F12:
+                save_screenshot()
             elif ev.key == pg.K_h:
                 shared.SHOW_HELP = not shared.SHOW_HELP
             elif ev.key == pg.K_e:
@@ -277,18 +284,6 @@ def rendering_sys():
         render_rows_of_text(scr, 50, 50, 38, game_over_msgs)
         render_messages(scr)
 
-        # lw, lh = shared.end_game_label0.get_size()
-        # scr.blit(
-        #     shared.end_game_label0, ((shared.SCR_WIDTH - lw) // 2, (shared.SCR_HEIGHT - lh) // 3)
-        # )
-        # lw, lh = shared.end_game_label1.get_size()
-        # scr.blit(
-        #     shared.end_game_label1, ((shared.SCR_WIDTH - lw) // 2, (shared.SCR_HEIGHT - lh) // 2)
-        # )
-        # lw, lh = shared.end_game_label2.get_size()
-        # scr.blit(
-        #     shared.end_game_label2, ((shared.SCR_WIDTH - lw) // 2, 2* (shared.SCR_HEIGHT - lh) // 3)
-        # )
     else:
         draw_all_mobs(scr)
         render_messages(scr)

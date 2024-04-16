@@ -25,6 +25,24 @@ pg = pyv.pygame
 #             return await response.json()
 
 # --------------------------
+# other
+# --------------------------
+def save_screenshot():
+    # save current screen to SCREENSHOT_FOLDER as PNG with timestamp in name
+    
+    # prevent from taking screenshots in web browser
+    # (it actually works, the file is saved in virtual FS 
+    # and there is access to it, but I don't see a way to download it)
+    if not shared.IS_WEB or shared.USE_HIGHSCORE_STUB:
+        time_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = shared.SCREENSHOT_FOLDER / f"screenshot_{time_str}.png"
+        pg.image.save(shared.screen, file_name)
+        shared.messages.append("screenshot saved to file")
+        if shared.IS_DEBUG:
+            shared.messages.append(str(file_name))
+
+
+# --------------------------
 # fancy walls
 # --------------------------
 def get_wall_tile(i, j, wall_type="big_fence"):
@@ -67,7 +85,7 @@ def render_messages(scr):
     ft = shared.fonts[font_size]
     # reverse order (printed from bottom of screen up) limit to 12 last messages
     for i, msg in enumerate(shared.messages[::-1][:12]):
-        label = ft.render(msg, True, "yellow", "black")
+        label = ft.render(str(msg), True, "yellow", "black")
         scr.blit(label, (22 * 32, shared.SCR_HEIGHT - ((i + 1) * font_size)))
 
 
