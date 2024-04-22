@@ -1,6 +1,13 @@
+from . import pimodules
 from pathlib import Path
 
-GAME_VER = "0.9"
+GAME_VER = "1.0"
+
+pyv = pimodules.pyved_engine
+GameStates = pyv.e_struct.enum(
+    'TitleScreen', 'Explore'
+)
+
 # print exceptions in GUI only in debug mode (useful for debugging highscore local web storage when there is no terminal)
 IS_DEBUG = True # check if we can use __debug__ with pyved and pygbag
 
