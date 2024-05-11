@@ -1,6 +1,7 @@
 import random
 from . import shared
 from . import pimodules
+from .shared import monster_types, monster_dmg_amount, monster_hitpoints
 
 pyv = pimodules.pyved_engine
 pyv.bootstrap_e()
@@ -31,12 +32,14 @@ def create_player():
 
 def create_monster(position, no):
     monster = pyv.new_from_archetype('monster')
+    mtype = random.choice(monster_types.all_codes)
     pyv.init_entity(monster, {
         'position': position,
-        'damages': shared.MONSTER_DMG,
-        'health_point': shared.MONSTER_HP,
+        'type': mtype,
+        'dmg': monster_dmg_amount.get(mtype, monster_dmg_amount[-1]),
+        'health_point': monster_hitpoints.get(mtype, monster_hitpoints[-1]),
         'no': no,
-        'color': (random.randint(20,255), random.randint(20,255), random.randint(20,255)),
+        'color': (random.randint(20, 255), random.randint(20, 255), random.randint(20, 255)),
         'path': [],
         'active': False  # the mob will become active, once the player sees it
     })

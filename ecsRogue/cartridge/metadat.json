@@ -8,7 +8,7 @@
     "assets": [
         "smallninja_sprites.json",
         "tileset.json",
-        "monster.png",
+        "roguelikecreatures.json",
         "exit_tile.png",
         "pot_tile.png"
     ],

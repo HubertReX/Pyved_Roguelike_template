@@ -1,19 +1,61 @@
-from . import pimodules
 from pathlib import Path
 
-GAME_VER = "1.0"
+from . import pimodules
 
+
+GAME_VER = "1.1"
 pyv = pimodules.pyved_engine
-GameStates = pyv.e_struct.enum(
+GameStates = pyv.enum(
     'TitleScreen', 'Explore'
 )
 
-# print exceptions in GUI only in debug mode (useful for debugging highscore local web storage when there is no terminal)
-IS_DEBUG = True # check if we can use __debug__ with pyved and pygbag
 
+# ----------------------------------
+#   + All that is related to Monsters +
+# ----------------------------------
+
+# Below you'll find a nice example of how you can use the `pyv.enum_from_n` built-in function.
+# Assuming you call it with the parameters below, then
+# monster_types.inv_map would be:
+# {8: 'Rat', 9: 'BossRat', ... }
+monster_types = pyv.enum_from_n(
+    8, 'Rat', 'BossRat', 'Dog',
+    Goblin=16,
+    MageGoblin=18,
+    Scorpion=35,
+    FireBeetle=42,
+    Skeleton=48,
+    ShroudedDeath=54,
+    Ghost=57
+)  # now, remember you can use monster_types.all_codes later on
+
+monster_dmg_amount = {
+    -1: 8,  # the default dmg amount is 8 HP, this is used only if the monster_type isnt found below
+    monster_types.Rat: 2,
+    monster_types.MageGoblin: 10,
+    monster_types.FireBeetle: 12,
+    monster_types.Scorpion: 15,
+    monster_types.Ghost: 18,
+    monster_types.ShroudedDeath: 24
+}
+
+monster_hitpoints = {
+    -1: 10,  # default hp amount
+    monster_types.Rat: 5,
+    monster_types.Ghost: 25,
+    monster_types.ShroudedDeath: 40
+}
+
+MAX_MONSTERS = 7
+MONSTERS = None  # will store the spritesheet after game initialization
+
+
+# print exceptions in GUI only in debug mode
+# (useful for debugging highscore local web storage when there is no terminal)
+IS_DEBUG = True  # check if we can use __debug__ with pyved and pygbag
 show_input = False
-user_name_input = None 
-user_name = None 
+user_name_input = None
+user_name = None
 
 fonts = {}
 FONT_SIZE_SMALL = 24
@@ -24,8 +66,9 @@ IS_WEB = False
 # local storage in web version for high score table
 if __import__("sys").platform == "emscripten":
     IS_WEB = True
-    
-### Highscore utils
+
+
+# Highscore utils
 # there are 3 implementations of highscore:
 # 1. using GameJolt API for desktop mode
 #    * unfortunately it doesn't work yet when run in the web browser
@@ -58,11 +101,11 @@ if USE_HIGHSCORE_STUB:
 # go to https://gamejolt.com/
 # create account
 # crate new game
-GAME_ID = "" # <YOUR_GAME_ID>
-PRIVATE_KEY = "" # <YOUR_KEY>
+GAME_ID = ""  # <YOUR_GAME_ID>
+PRIVATE_KEY = ""  # <YOUR_KEY>
 gamejoltapi = None
-TEST_SCORE_TABLE_ID = 0 # create test score table and enter it's id here
-PROD_SCORE_TABLE_ID = 0 # open default score table and enter it's id here
+TEST_SCORE_TABLE_ID = 0  # create test score table and enter it's id here
+PROD_SCORE_TABLE_ID = 0  # open default score table and enter it's id here
 SCORE_TABLE = []
 SCORES = {}
 NO_TOP_SCORES = 10
@@ -104,23 +147,21 @@ SCREENSHOT_FOLDER = Path("..") / "screenshots"
 VISION_RANGE: int = 4
 fov_computer = None
 
-
 random_maze = None
 game_state = {
-            "visibility_m": None,
-            "enemies_pos2type": dict(),
-            # "equipped_spell": None,
-            # "owned_spells": set()
-        }
-
+    "visibility_m": None,
+    "enemies_pos2type": dict(),
+    # "equipped_spell": None,
+    # "owned_spells": set()
+}
 
 CELL_SIDE = 32  # px
 MAZE_SIZE = (22, 22)
 WALL_COLOR = (8, 8, 24)
 HIDDEN_CELL_COLOR = (24, 24, 24)
 # user_name input label colors
-COLOR_INACTIVE = 'yellow4' # shared.HIDDEN_CELL_COLOR # pygame.Color('lightskyblue3')
-COLOR_ACTIVE = 'yellow' # pygame.Color('dodgerblue2')
+COLOR_INACTIVE = 'yellow4'  # shared.HIDDEN_CELL_COLOR # pygame.Color('lightskyblue3')
+COLOR_ACTIVE = 'yellow'  # pygame.Color('dodgerblue2')
 
 SCR_WIDTH = 960
 SCR_HEIGHT = 720
@@ -133,9 +174,6 @@ AVATAR = None
 PLAYER_DMG = 10
 PLAYER_HP = 100
 
-MONSTER_DMG = 10
-MONSTER_HP = 10
-MONSTER = None
 TILESET = None
 # two glvars for a quick n dirty bugfix (js web cxt)
 joker_tile = None
@@ -169,7 +207,7 @@ WALLS_TERRAIN_SETS = {
         "1111": 53
     },
     "small_fence": {
-        "0000": 109,        
+        "0000": 109,
         "1000": 78,
         "0100": 77,
         "0010": 78,
@@ -187,7 +225,7 @@ WALLS_TERRAIN_SETS = {
         "1111": 109
     },
     "big_wall": {
-        "0000": 165,        
+        "0000": 165,
         "1000": 134,
         "0100": 133,
         "0010": 134,
@@ -207,7 +245,6 @@ WALLS_TERRAIN_SETS = {
 }
 POTION_DMG = 20
 MAX_POTIONS = 4
-MAX_MONSTERS = 4
 SHOW_HELP = False
 SHOW_HIGHSCORE = False
 # CHEATS/DEBUG

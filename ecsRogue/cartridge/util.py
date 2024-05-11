@@ -11,11 +11,12 @@ import time
 from . import shared
 from . import world
 from . import pimodules
-
+from .shared import monster_types
 
 # alias
 pyv = pimodules.pyved_engine
 pg = pyv.pygame
+
 
 # --------------------------
 # other
@@ -490,7 +491,10 @@ def draw_all_mobs(scrref):
 
     # draw all enemies
     for monster in monsters:
+        mtype = monster["type"]
+        mstr_px_repr = shared.MONSTERS[f'{mtype}.png']
         pos = monster["position"]
+
         # pos, t = enemy_info
         if shared.ALL_MONSTERS_VISIBLE or shared.game_state["visibility_m"].get_val(*pos):
             en_i, en_j = pos[0] * shared.CELL_SIDE, (pos[1] + 1) * shared.CELL_SIDE
@@ -507,7 +511,7 @@ def draw_all_mobs(scrref):
                                 4, 4
                             )
                         )
-            scrref.blit(shared.MONSTER, (en_i, en_j, shared.CELL_SIDE, shared.CELL_SIDE))
+            scrref.blit(mstr_px_repr, (en_i, en_j, shared.CELL_SIDE, shared.CELL_SIDE))
 
 
 def player_push(directio):

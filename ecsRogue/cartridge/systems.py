@@ -21,7 +21,7 @@ __all__ = [
 pyv = pimodules.pyved_engine
 pg = pyv.pygame
 Sprsheet = pyv.gfx.Spritesheet
-BoolMatrx = pyv.e_struct.BoolMatrix
+BoolMatrx = pyv.struct.BoolMatrix
 
 # global vars
 tileset = None
@@ -326,8 +326,8 @@ def physics_sys():
         if monster['position'] == player['position']:
             # print(f" {shared.sys_iterator=} {monster['no']}")
             monster['health_point'] -= player['damages']
-            player['health_point'] -= monster['damages']
-            shared.messages.append(f"Got hit (-{monster['damages']}HP)")
+            player['health_point'] -= monster['dmg']
+            shared.messages.append(f"Got hit (-{monster['dmg']}HP)")
             # print(f"HP :{player['health_point']}")
             if monster['health_point'] < 0:
                 monsters_to_del.append(monster)
