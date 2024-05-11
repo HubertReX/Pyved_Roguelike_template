@@ -54,6 +54,7 @@ def load_fonts():
     font_sizes = [shared.FONT_SIZE_SMALL, shared.FONT_SIZE_MEDIUM, shared.FONT_SIZE_LARGE]
     for font_size in font_sizes:
         shared.fonts[font_size] = pyv.pygame.font.Font(None, font_size)
+    shared.pixelart_font = pyv.gui.ImgBasedFont('black', img=pyv.vars.images['pixelart_font'])
 
 
 def init_menu():

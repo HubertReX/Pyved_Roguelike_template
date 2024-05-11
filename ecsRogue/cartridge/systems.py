@@ -222,7 +222,7 @@ def gamestate_update_sys():
     for potion in potions:
         if potion['effect'] in ["Heal", "Poison"]:
             potions_cnt += 1
-    shared.status_label = ft.render(f'Level: {shared.level_count}   Health: {player["health_point"]}/{shared.PLAYER_HP}   Monsters left: {monsters_cnt}   Potions left: {potions_cnt}    [h] - help', True, (255, 255, 0), 'black')
+    shared.status_info = f'Level: {shared.level_count}   Health: {player["health_point"]}/{shared.PLAYER_HP}   Monsters left: {monsters_cnt}   Potions left: {potions_cnt} [h] - help'
 
 
 # MARK: rendering_sys
@@ -282,24 +282,37 @@ def rendering_sys():
 
     else:
         draw_all_mobs(scr)
+
+        # render what happens during the run
         render_messages(scr)
         if shared.SHOW_HELP:
             render_help(scr)
 
-    # Re-enable this when the BUG temp surface [custom buffer] webctx is fixed
+    # TODO in the future:
+    # Can uncomment this in case the BUG temp surface [custom buffer] webctx is fixed
     # view = shared.screen
     # view.fill(shared.WALL_COLOR)
-
     # lw, lh = shared.status_label.get_size()
-
-    # before:
+    # [use custom buffer]
     # view.blit(scr, (0, 5))
     # view.blit(shared.status_label, (0, 0))
-    # after:
-    scr.blit(shared.status_label, (0, 0))
 
-    # remove this line when the BUG temp surface [custom buffer] webctx is fixed
+    # - Her, we render the top line
+    # ftsize = shared.FONT_SIZE_SMALL
+    # ft = shared.fonts[ftsize]
+    ft = shared.pixelart_font
+    # label = ft.render(shared.status_info, True, (255, 255, 0), 'black')
+    status_minilabel = ft.render(shared.status_info, False, None)  # third argument is unused
+    if shared.TEXT_UPSCALING:
+        targetsize = (status_minilabel.get_width()*2, status_minilabel.get_height()*2)
+        status_label = pyv.pygame.transform.scale(status_minilabel, targetsize)
+        scr.blit(status_label, (4, 4))
+    else:
+        scr.blit(status_minilabel, (4, 4))
+
+    # TODO remove this line in case the BUG temp surface [custom buffer] webctx is fixed
     view = scr
+
     if shared.SHOW_HIGHSCORE:
         render_score_table(view)
     if shared.show_input:
