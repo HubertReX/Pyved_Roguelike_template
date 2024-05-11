@@ -58,6 +58,8 @@ user_name_input = None
 user_name = None
 
 fonts = {}
+pixelart_font = None  # stores a special object pyv.gui.ImgBasedFont
+TEXT_UPSCALING = True
 FONT_SIZE_SMALL = 24
 FONT_SIZE_MEDIUM = 38
 FONT_SIZE_LARGE = 55
@@ -112,7 +114,8 @@ NO_TOP_SCORES = 10
 
 screen = None
 is_game_over = False
-status_label = None
+status_label = None  # deprecated
+status_info = None  # line of text that will be displayed at the top, when playing
 
 game_over_msgs_hs = [
     "Game Over",

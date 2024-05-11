@@ -1,5 +1,5 @@
 {
-    "vmlib_ver": "24_4a3",
+    "vmlib_ver": "24_5a1",
     "dependencies": {
         "pyved_engine": "???"
     },
@@ -10,7 +10,8 @@
         "tileset.json",
         "roguelikecreatures.json",
         "exit_tile.png",
-        "pot_tile.png"
+        "pot_tile.png",
+        "pixelart_font.png"
     ],
     "sounds": [],
     "slug": "ecsRogue",
