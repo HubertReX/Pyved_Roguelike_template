@@ -41,9 +41,9 @@ Try it online:
 
 ## Ideas for future
 
-* ~~Highscore table~~ ✅ done
-* ~~use walls tiles from 'tileset.png' instead of black rectangle~~
-* add more monster types
+* ✅ ~~Highscore table~~
+* ✅ ~~use walls tiles from `tileset.png` instead of black rectangle~~
+* ✅ ~~add more monster types~~
 * make fight more entertaining
 * switch font to monospace pixel art
 * add sounds (music and sfx)
@@ -126,5 +126,9 @@ full instruction [here](https://pygame-web.github.io/wiki/pygbag/github.io/)
 Assets created by:
 [Pixel-boy](https://pixel-boy.itch.io/)
 [AAA](https://www.instagram.com/challenger.aaa/?hl=fr)
+
+and:
+
+[@JoeCreates](https://x.com/JoeCreates) for monsters.
 
 Patreon: [https://www.patreon.com/pixelarchipel](https://www.patreon.com/pixelarchipel)
