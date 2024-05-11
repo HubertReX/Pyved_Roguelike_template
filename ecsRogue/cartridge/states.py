@@ -41,21 +41,20 @@ def init_images():
     # planche_avatar.set_infos(grid_rez)
     # planche_avatar.colorkey = (255, 0, 255)
 
-    monster_img = pyv.vars.images['monster']
-
     # old avatar:
     # shared.AVATAR = planche_avatar.image_by_rank(0)
     # new avatar:
     avatar_spr_sheet = pyv.vars.spritesheets['smallninja_sprites']
     shared.AVATAR = avatar_spr_sheet['av0.png']
 
-    shared.MONSTER = monster_img
+    shared.MONSTERS = pyv.vars.spritesheets['roguelikecreatures']
 
 
 def load_fonts():
     font_sizes = [shared.FONT_SIZE_SMALL, shared.FONT_SIZE_MEDIUM, shared.FONT_SIZE_LARGE]
     for font_size in font_sizes:
         shared.fonts[font_size] = pyv.pygame.font.Font(None, font_size)
+    shared.pixelart_font = pyv.gui.ImgBasedFont('black', img=pyv.vars.images['pixelart_font'])
 
 
 def init_menu():
@@ -148,7 +147,7 @@ class ExploreState(pyv.BaseGameState):
             'position', 'controls', 'body', 'damages', 'health_point', 'enter_new_map',
         ))
         # pyv.define_archetype('wall', ('body',))
-        pyv.define_archetype('monster', ('position', 'damages', 'health_point', 'active', 'color', 'path', 'no'))
+        pyv.define_archetype('monster', ('position', 'type', 'dmg', 'health_point', 'active', 'color', 'path', 'no'))
         pyv.define_archetype('exit', ('position',))
         pyv.define_archetype('potion', ('position', 'effect',))
 

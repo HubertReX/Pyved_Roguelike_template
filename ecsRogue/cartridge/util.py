@@ -8,14 +8,16 @@ import asyncio
 import json
 import time
 # import inspect
+
 from . import shared
 from . import world
 from . import pimodules
-
+from .shared import monster_types
 
 # alias
 pyv = pimodules.pyved_engine
 pg = pyv.pygame
+
 
 # --------------------------
 # other
@@ -69,17 +71,26 @@ def get_wall_tile(i, j, wall_type="big_fence"):
 
     return shared.WALLS_TERRAIN_SETS[wall_type].get(key, 0)
 
+
 # --------------------------
 # rendering helper functions
 # --------------------------
 def render_messages(scr):
     # render last 12 game events in lower right part of screen
-    font_size = shared.FONT_SIZE_SMALL
-    ft = shared.fonts[font_size]
-    
+
+    # the old way:
+    # font_size = shared.FONT_SIZE_SMALL
+    # ft = shared.fonts[font_size]
+    # the new way:
+    ft = shared.pixelart_font
+    font_size = ft.get_linesize()*2  # because we will use x2 upscaling, post-rendering
+
     # reverse order (printed from bottom of screen up) limit to 12 last messages
     for i, msg in enumerate(shared.messages[::-1][:12]):
         label = ft.render(str(msg), True, "yellow", "black")
+        if shared.TEXT_UPSCALING:
+            targetsize = (label.get_width()*2, label.get_height()*2)
+            label = pyv.pygame.transform.scale(label, targetsize)
         right_panel_x = shared.MAZE_SIZE[0] * shared.CELL_SIDE
         scr.blit(label, (right_panel_x, shared.SCR_HEIGHT - ((i + 1) * font_size)))
 
@@ -490,7 +501,10 @@ def draw_all_mobs(scrref):
 
     # draw all enemies
     for monster in monsters:
+        mtype = monster["type"]
+        mstr_px_repr = shared.MONSTERS[f'{mtype}.png']
         pos = monster["position"]
+
         # pos, t = enemy_info
         if shared.ALL_MONSTERS_VISIBLE or shared.game_state["visibility_m"].get_val(*pos):
             en_i, en_j = pos[0] * shared.CELL_SIDE, (pos[1] + 1) * shared.CELL_SIDE
@@ -507,7 +521,7 @@ def draw_all_mobs(scrref):
                                 4, 4
                             )
                         )
-            scrref.blit(shared.MONSTER, (en_i, en_j, shared.CELL_SIDE, shared.CELL_SIDE))
+            scrref.blit(mstr_px_repr, (en_i, en_j, shared.CELL_SIDE, shared.CELL_SIDE))
 
 
 def player_push(directio):
